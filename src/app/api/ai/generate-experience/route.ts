@@ -7,7 +7,7 @@ export async function POST(req: NextRequest) {
   try {
     const body: GenerateExperienceBody = await req.json();
 
-    const { experienceLevel, yearOfExperience, techStack ,jobRole} = body;
+    const { experienceLevel, yearOfExperience, techStack, jobRole } = body;
 
     if (!experienceLevel || !yearOfExperience || !techStack || !jobRole) {
       return NextResponse.json<ApiResponse>(
@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-const prompt = `
+    const prompt = `
 You are an expert ATS resume writer, technical recruiter, and career consultant.
 
 Generate professional, ATS-friendly work experience entries based on the provided information.
@@ -85,16 +85,11 @@ Output Format:
 {
   "experience": [
     {
-      "jobTitle": "Job Title",
-      "companyType": "Technology Startup",
-      "employmentType": "Full-Time",
-      "duration": "2023 - Present",
-      "description": [
-        "Achievement or responsibility 1",
-        "Achievement or responsibility 2",
-        "Achievement or responsibility 3",
-        "Achievement or responsibility 4"
-      ]
+      "company": "Technology Startup",
+      "position": "Frontend Developer",
+      "startDate": "2023",
+      "endDate": "Present",
+      "description": "..."
     }
   ]
 }

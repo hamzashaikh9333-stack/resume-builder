@@ -55,13 +55,11 @@ Output Format:
 {
   "projects": [
     {
-      "name": "Project Name",
-      "techStack": ["Skill1", "Skill2"],
-      "description": [
-        "Bullet point 1",
-        "Bullet point 2",
-        "Bullet point 3"
-      ]
+      "title": "Project Name",
+      "description": "Project description",
+      "techStack": ["React", "Node.js"],
+      "githubLink": "",
+      "liveLink": ""
     }
   ]
 }
@@ -78,13 +76,13 @@ Output Format:
       );
     }
 
-    const projectDescription = JSON.parse(result);
+    const projects = JSON.parse(result);
 
     return NextResponse.json<ApiResponse>(
       {
         success: true,
         message: "Project description generated successfully",
-        data: { projectDescription },
+        data: projects,
       },
       { status: 201 },
     );

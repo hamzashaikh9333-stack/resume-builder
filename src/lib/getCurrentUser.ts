@@ -11,6 +11,6 @@ export async function getCurrentUser() {
 
     console.log("decoded value", decode)
     if (!decode) throw new Error('Unauthorized token');
-
-    return decode.userId
+    const userId = decode.userId
+    return userId
 }

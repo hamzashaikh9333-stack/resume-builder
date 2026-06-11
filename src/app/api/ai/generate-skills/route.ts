@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
 
     const { experienceLevel, jobTitle } = body;
 
-    if (!experienceLevel ||  !jobTitle) {
+    if (!experienceLevel || !jobTitle) {
       return NextResponse.json<ApiResponse>(
         {
           success: false,
@@ -44,7 +44,20 @@ Return only the comma-separated technical skills.
 `;
     const result = await generateAiContent(prompt);
 
+    if (!result) {
+      return NextResponse.json<ApiResponse>(
+        {
+          success: false,
+          message: "No response received from AI",
+        },
+        { status: 500 },
+      );
+    }
+
     const skills = result
+      .split(",")
+      .map((skill) => skill.trim())
+      .filter(Boolean);
 
     return NextResponse.json<ApiResponse>(
       {
@@ -53,7 +66,7 @@ Return only the comma-separated technical skills.
         data: { skills },
       },
       { status: 201 },
-    )
+    );
   } catch (error) {
     console.log("error in Generate Skills api", error);
     return NextResponse.json<ApiResponse>(
