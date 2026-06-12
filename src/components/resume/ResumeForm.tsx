@@ -3,8 +3,10 @@
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import { Resume } from "@/interfaces/resume.interface";
+
 import { resumeSchema } from "@/schemas/resume.schema";
-import type { ResumeFormData } from "@/schemas/resume.schema";;
+import type { ResumeFormData } from "@/schemas/resume.schema";
 import { resumeService } from "@/services/resume.service";
 
 import PersonalInfoForm from "./PersonalInfoForm";
@@ -12,47 +14,72 @@ import SummarySection from "./SummarySection";
 import SkillsSection from "./SkillsSection";
 import ExperienceSection from "./ExperienceSection";
 import ProjectsSection from "./ProjectsSection";
+import ResumePreview from "./ResumePreview";
+import EducationSection from "./EducationSection";
+import CertificationsSection from "./CertificationsSection";
+import { useRouter } from "next/navigation";
 
-export default function ResumeForm() {
+interface ResumeFormProps {
+  mode?: "create" | "edit";
+  initialData?: Resume;
+}
+
+export default function ResumeForm({
+  mode = "create",
+  initialData,
+}: ResumeFormProps) {
   const methods = useForm<ResumeFormData>({
     resolver: zodResolver(resumeSchema),
-    defaultValues: {
-      title: "My Resume",
+    defaultValues: initialData
+      ? {
+          ...initialData,
+          yearOfExperience: 0,
+        }
+      : {
+          title: "My Resume",
 
-      personalInfo: {
-        fullname: "",
-        email: "",
-        mobile: "",
-        address: "",
-        linkedin: "",
-        github: "",
-        portfolio: "",
-      },
+          personalInfo: {
+            fullname: "",
+            email: "",
+            mobile: "",
+            address: "",
+            linkedin: "",
+            github: "",
+            portfolio: "",
+          },
 
-      summary: "",
+          summary: "",
 
-      skills: [],
+          skills: [],
 
-      certifications: [],
+          certifications: [],
 
-      workExperience: [],
+          workExperience: [],
 
-      projects: [],
+          projects: [],
 
-      yearOfExperience: 0,
+          yearOfExperience: 0,
 
-      education: [],
-    },
+          education: [],
+        },
   });
+  const router = useRouter();
 
   const onSubmit = async (data: ResumeFormData) => {
+    console.log("FORM SUBMITTED");
+
     try {
-      const response =
-        await resumeService.createResume(data);
+      if (mode === "edit" && initialData) {
+        await resumeService.updateResume(initialData._id, data);
 
-      console.log(response);
+        router.push(`/resume/${initialData._id}`);
 
-      alert("Resume Created Successfully");
+        return;
+      }
+
+      const response = await resumeService.createResume(data);
+
+      router.push(`/resume/${response.data._id}`);
     } catch (error) {
       console.error(error);
     }
@@ -60,27 +87,42 @@ export default function ResumeForm() {
 
   return (
     <FormProvider {...methods}>
-      <form
-        onSubmit={methods.handleSubmit(onSubmit)}
-        className="space-y-8"
-      >
-        <PersonalInfoForm />
+      <div className="grid gap-6 lg:grid-cols-2">
+        <div>
+          <form
+            onSubmit={methods.handleSubmit(onSubmit, (errors) => {
+              console.log("FORM ERRORS");
+              console.log(errors);
+            })}
+            className="space-y-8"
+          >
+            <PersonalInfoForm />
 
-        <SummarySection />
+            <SummarySection />
 
-        <SkillsSection />
+            <SkillsSection />
 
-        <ExperienceSection />
+            <ExperienceSection />
 
-        <ProjectsSection />
+            <ProjectsSection />
 
-        <button
-          type="submit"
-          className="rounded-lg bg-blue-600 px-6 py-3 text-white hover:bg-blue-700"
-        >
-          Save Resume
-        </button>
-      </form>
+            <EducationSection />
+
+            <CertificationsSection />
+
+            <button
+              type="submit"
+              className="rounded-lg bg-blue-600 px-6 py-3 text-white hover:bg-blue-700"
+            >
+              {mode === "edit" ? "Update Resume" : "Save Resume"}
+            </button>
+          </form>
+        </div>
+
+        <div>
+          <ResumePreview />
+        </div>
+      </div>
     </FormProvider>
   );
 }

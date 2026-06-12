@@ -14,5 +14,16 @@ export const ENDPOINTS = {
   // Resume
   CREATE_RESUME: "/resume/create",
 
+  GET_RESUMES: "/resume",
+
+  UPDATE_RESUME: (resumeId: string) =>
+  `/resume/${resumeId}`,
+
+  DELETE_RESUME: (resumeId: string) =>
+  `/resume/${resumeId}`,
+
   GET_RESUME: (resumeId: string) => `/resume/${resumeId}`,
 } as const;
+
+
+

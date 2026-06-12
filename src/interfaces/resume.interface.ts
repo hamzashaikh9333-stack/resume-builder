@@ -58,6 +58,4 @@ export interface Resume {
 
 
 
-export interface ResumeResponse {
-  resume: Resume;
-}
+export type ResumeResponse = Resume;

@@ -2,27 +2,45 @@
 
 import { useFormContext } from "react-hook-form";
 import { Sparkles } from "lucide-react";
-
+import { aiService } from "@/services/ai.service";
 import { ResumeFormData } from "@/schemas/resume.schema";
 
 export default function SummarySection() {
   const {
+    watch,
+    setValue,
     register,
     formState: { errors },
   } = useFormContext<ResumeFormData>();
 
   const handleGenerateSummary = async () => {
-    alert(
-      "AI Summary will be connected after Experience Level and Job Title fields are added."
-    );
+    try {
+      const jobTitle = watch("jobTitle");
+      const experienceLevel = watch("experienceLevel");
+      const skills = watch("skills") ?? [];
+
+      if (!jobTitle || !experienceLevel || skills.length === 0) {
+        alert("Please generate skills first.");
+        return;
+      }
+
+      const response = await aiService.generateSummary({
+        jobTitle,
+        experienceLevel,
+        skills: skills.join(", "),
+      });
+
+      setValue("summary", response.data.summary);
+    } catch (error) {
+      console.error(error);
+      alert("Failed to generate summary");
+    }
   };
 
   return (
     <section className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
       <div className="mb-6 flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-white">
-          Professional Summary
-        </h2>
+        <h2 className="text-2xl font-bold text-white">Professional Summary</h2>
 
         <button
           type="button"
@@ -42,13 +60,12 @@ export default function SummarySection() {
       />
 
       {errors.summary && (
-        <p className="mt-2 text-sm text-red-400">
-          {errors.summary.message}
-        </p>
+        <p className="mt-2 text-sm text-red-400">{errors.summary.message}</p>
       )}
 
       <p className="mt-3 text-sm text-slate-400">
-        This section appears at the top of your resume and gives recruiters a quick overview of your profile.
+        This section appears at the top of your resume and gives recruiters a
+        quick overview of your profile.
       </p>
     </section>
   );
