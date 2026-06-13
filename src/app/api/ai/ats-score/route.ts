@@ -7,7 +7,7 @@ export async function POST(req: NextRequest) {
   try {
     const body: AtsScoreBody = await req.json();
 
-    const {resumeText } = body;
+    const { resumeText } = body;
 
     if (!resumeText) {
       return NextResponse.json<ApiResponse>(
@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
- const prompt = `
+    const prompt = `
 You are an expert ATS (Applicant Tracking System) analyzer, resume reviewer, and technical recruiter.
 
 Analyze the following resume and provide a detailed ATS evaluation.
@@ -74,13 +74,23 @@ Output Format:
 
     const result = await generateAiContent(prompt);
 
-    const atsScore = result;
+    if (!result) {
+      return NextResponse.json<ApiResponse>(
+        {
+          success: false,
+          message: "No response received from AI",
+        },
+        { status: 500 },
+      );
+    }
+
+    const atsScore = JSON.parse(result);
 
     return NextResponse.json<ApiResponse>(
       {
         success: true,
         message: "ATS score generated successfully",
-        data: { atsScore },
+        data: atsScore,
       },
       { status: 201 },
     );

@@ -2,6 +2,7 @@ export const ENDPOINTS = {
   // Auth
   LOGIN: "/auth/login",
   REGISTER: "/auth/register",
+  LOGOUT: "/auth/logout",
 
   // AI
   GENERATE_SUMMARY: "/ai/generate-summary",

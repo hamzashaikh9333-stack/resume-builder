@@ -4,6 +4,10 @@ import { useEffect, useState } from "react";
 import { resumeService } from "@/services/resume.service";
 import { Resume } from "@/interfaces/resume.interface";
 
+import { useRouter } from "next/navigation";
+import { authService } from "@/services/auth.service";
+import { toast } from "sonner";
+
 import Link from "next/link";
 import { FileText, PlusCircle, Sparkles, LogOut } from "lucide-react";
 
@@ -11,6 +15,22 @@ export default function DashboardPage() {
   const [resumes, setResumes] = useState<Resume[]>([]);
 
   const [loading, setLoading] = useState(true);
+
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      await authService.logout();
+
+      toast.success("Logged out successfully");
+
+      router.push("/auth/login");
+    } catch (error) {
+      console.error(error);
+
+      toast.error("Failed to logout");
+    }
+  };
 
   useEffect(() => {
     const fetchResumes = async () => {
@@ -35,7 +55,10 @@ export default function DashboardPage() {
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <h1 className="text-2xl font-bold">AI Resume Builder</h1>
 
-          <button className="flex items-center gap-2 rounded-lg border border-white/10 px-4 py-2 text-sm hover:bg-white/5 transition">
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-2 rounded-lg border border-white/10 px-4 py-2 text-sm transition hover:bg-white/5"
+          >
             <LogOut size={16} />
             Logout
           </button>
@@ -68,22 +91,6 @@ export default function DashboardPage() {
             <h3 className="text-3xl font-bold">{resumes.length}</h3>
 
             <p className="mt-2 text-slate-400">Total Resumes</p>
-          </div>
-
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
-            <Sparkles className="mb-4 text-yellow-500" />
-
-            <h3 className="text-3xl font-bold">0</h3>
-
-            <p className="mt-2 text-slate-400">AI Optimizations</p>
-          </div>
-
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
-            <FileText className="mb-4 text-green-500" />
-
-            <h3 className="text-3xl font-bold">0</h3>
-
-            <p className="mt-2 text-slate-400">ATS Checks</p>
           </div>
         </section>
 

@@ -4,6 +4,7 @@ import { useFormContext } from "react-hook-form";
 import { Sparkles } from "lucide-react";
 import { aiService } from "@/services/ai.service";
 import { ResumeFormData } from "@/schemas/resume.schema";
+import { toast } from "sonner";
 
 export default function SummarySection() {
   const {
@@ -20,7 +21,7 @@ export default function SummarySection() {
       const skills = watch("skills") ?? [];
 
       if (!jobTitle || !experienceLevel || skills.length === 0) {
-        alert("Please generate skills first.");
+        toast.warning("Please generate skills first.");
         return;
       }
 
@@ -33,7 +34,7 @@ export default function SummarySection() {
       setValue("summary", response.data.summary);
     } catch (error) {
       console.error(error);
-      alert("Failed to generate summary");
+      toast.error("Failed to generate summary");
     }
   };
 

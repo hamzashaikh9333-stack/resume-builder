@@ -51,13 +51,13 @@ Return only the improved ATS-friendly content.
 
     const result = await generateAiContent(prompt);
 
-    const improvedContent = result;
-
     return NextResponse.json<ApiResponse>(
       {
         success: true,
         message: "Content improved successfully",
-        data: { improvedContent },
+        data: {
+          content: result,
+        },
       },
       { status: 201 },
     );

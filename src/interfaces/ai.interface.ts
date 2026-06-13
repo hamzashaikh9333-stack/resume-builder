@@ -45,7 +45,7 @@ export interface SkillsResponse {
 export interface ProjectDescriptionResponse {
   projects: {
     title: string;
-    description: string;
+    description: string | string[];
     techStack: string[];
     githubLink: string;
     liveLink: string;
@@ -58,7 +58,7 @@ export interface ExperienceResponse {
     position: string;
     startDate: string;
     endDate: string;
-    description: string;
+    description: string | string[];
   }[];
 }
 
@@ -68,5 +68,9 @@ export interface ImproveContentResponse {
 
 export interface AtsScoreResponse {
   score: number;
+  rating: string;
+  summary: string;
+  strengths: string[];
+  weaknesses: string[];
   suggestions: string[];
 }

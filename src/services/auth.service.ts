@@ -11,7 +11,7 @@ export const authService = {
   register: async (body: RegisterBody) => {
     const { data } = await api.post<ApiResponse<AuthResponse>>(
       ENDPOINTS.REGISTER,
-      body
+      body,
     );
 
     return data;
@@ -20,8 +20,13 @@ export const authService = {
   login: async (body: LoginBody) => {
     const { data } = await api.post<ApiResponse<AuthResponse>>(
       ENDPOINTS.LOGIN,
-      body
+      body,
     );
+
+    return data;
+  },
+  logout: async () => {
+    const { data } = await api.post(ENDPOINTS.LOGOUT);
 
     return data;
   },
