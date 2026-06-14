@@ -33,7 +33,9 @@ const PdfResumeTemplate = forwardRef<HTMLDivElement, PdfResumeTemplateProps>(
               {resume.personalInfo.fullname}
             </h1>
 
-            <p className="text-3xl text-gray-700">{resume.title}</p>
+            <p className="text-3xl" style={{ color: "#374151" }}>
+              {resume.title}
+            </p>
           </div>
         </div>
 
@@ -96,7 +98,7 @@ const PdfResumeTemplate = forwardRef<HTMLDivElement, PdfResumeTemplateProps>(
 
                   <p className="font-medium">{exp.company}</p>
 
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm" style={{ color: "#4b5563" }}>
                     {exp.startDate} - {exp.endDate}
                   </p>
 
@@ -134,7 +136,7 @@ const PdfResumeTemplate = forwardRef<HTMLDivElement, PdfResumeTemplateProps>(
 
                   <p>{edu.institute}</p>
 
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm" style={{ color: "#4b5563" }}>
                     {edu.startDate} - {edu.endDate}
                   </p>
                 </div>

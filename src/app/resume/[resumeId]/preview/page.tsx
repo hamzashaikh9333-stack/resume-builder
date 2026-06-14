@@ -47,40 +47,66 @@ export default function PreviewResumePage() {
     return <div className="p-10 text-white">Resume not found</div>;
   }
   const handleDownloadPdf = async () => {
-    if (!resume) return;
+    try {
+      if (!resume) return;
 
-    if (!resumeRef.current) return;
+      if (!resumeRef.current) return;
 
-    const canvas = await html2canvas(resumeRef.current, {
-      scale: 2,
-      backgroundColor: "#ffffff",
-    });
+      const canvas = await html2canvas(resumeRef.current, {
+        scale: 2,
+        backgroundColor: "#ffffff",
+        logging: true,
+        useCORS: true,
+      });
 
-    const imageData = canvas.toDataURL("image/png");
+      const imageData = canvas.toDataURL("image/png");
 
-    const pdf = new jsPDF("p", "mm", "a4");
+      const pdf = new jsPDF("p", "mm", "a4");
 
-    const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfWidth = pdf.internal.pageSize.getWidth();
 
-    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
-    pdf.addImage(imageData, "PNG", 0, 0, pdfWidth, pdfHeight);
+      pdf.addImage(imageData, "PNG", 0, 0, pdfWidth, pdfHeight);
 
-    pdf.save(`${resume.personalInfo.fullname}-resume.pdf`);
+      pdf.save(`${resume.personalInfo.fullname}-resume.pdf`);
+    } catch (error) {
+      console.error("PDF ERROR:", error);
+    }
   };
 
   return (
-    <main className="min-h-screen bg-slate-800 p-12">
+    <main
+      style={{
+        minHeight: "100vh",
+        background: "#1e293b",
+        padding: "3rem",
+      }}
+    >
       <div className="mb-6 flex justify-center">
         <button
           onClick={handleDownloadPdf}
-          className="rounded-lg bg-green-600 px-6 py-3 text-white hover:bg-green-700"
+          style={{
+            background: "#16a34a",
+            color: "#ffffff",
+            padding: "12px 24px",
+            borderRadius: "8px",
+          }}
         >
           Download PDF
         </button>
       </div>
 
-      <PdfResumeTemplate ref={resumeRef} resume={resume} />
+      <div className="flex justify-center">
+        <div
+          style={{
+            background: "#ffffff",
+            color: "#000000",
+          }}
+        >
+          <PdfResumeTemplate ref={resumeRef} resume={resume} />
+        </div>
+      </div>
     </main>
   );
 }
