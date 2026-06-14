@@ -1,11 +1,5 @@
-import React from 'react'
+import { redirect } from "next/navigation";
 
-type Props = {}
-
-function page({}: Props) {
-  return (
-    <div>This is main page</div>
-  )
+export default function Home() {
+  redirect("/auth/login");
 }
-
-export default page
